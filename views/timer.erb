@@ -8,14 +8,19 @@
     <link rel="stylesheet" href="/css/timer.css" type="text/css" media="screen">
     <script type="text/javascript" src="/js/jquery-1.5.1.js"></script>
     <script type="text/javascript" src="/js/timer.js"></script>
-
   </head>
   <body>
     <h1>Timer</h1>
     <script type="text/javascript" charset="utf-8">
-      timer_alert();
+      $(function() { 
+        var t = new timer();
+        t.init() ;  
+      } );
     </script>
+    <div id="timer" >
+    
+    </div>
+    <a href="" >start</a>
+    
   </body>
-  
-  
 </html>
