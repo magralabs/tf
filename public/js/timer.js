@@ -6,24 +6,41 @@ var timer = function() {
 	var current = 0 ;
 	var t_start = 0 ;
 	var t_stop = 0 ;
+	var t_past = 0 ;
 	var run = false;
 	
 	this.init = function() {
 		printTime() ;
 		$( "#timer_start" ).click( start ) ;
 		$( "#timer_stop" ).click( stop ) ;
+		$( "#timer_pause" ).click( pause ) ;
     };
     
     var start = function() {
+	  if( run ) t_past = 0 ;
 	  t_start = getTime() ;
 	  run = true;
 	  refresh();
 	};
 	
+	var pause = function() {
+		if( run ) {
+		  t_past += getTime() - t_start ;
+		  run = false ;
+		} else {
+			start();
+		}
+	}
+	
 	var stop = function() {
-	  t_stop = getTime() ;
 	  run = false ;
+	  reset();
 	};
+	
+	var reset = function() {
+	  t_past = t_start = t_stop = current = 0 ;	
+	 
+	}
 
     var getTime = function() {
 	  	var d = new Date() ;
@@ -49,7 +66,7 @@ var timer = function() {
 	}
 	
 	var printTime = function() {
-		$("#timer").html( timeToStr( current - t_start ) );
+		$("#timer").html( timeToStr( t_past + current - t_start ) );
 	}
 	
 } ;
