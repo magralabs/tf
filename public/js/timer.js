@@ -5,17 +5,25 @@ function timer_alert() {
 var timer = function() {
 	var current = 0 ;
 	var t_start = 0 ;
+	var t_stop = 0 ;
+	var run = false;
 	
 	this.init = function() {
 		printTime() ;
 		$( "#timer_start" ).click( start ) ;
+		$( "#timer_stop" ).click( stop ) ;
     };
     
     var start = function() {
 	  t_start = getTime() ;
+	  run = true;
 	  refresh();
 	};
 	
+	var stop = function() {
+	  t_stop = getTime() ;
+	  run = false ;
+	};
 
     var getTime = function() {
 	  	var d = new Date() ;
@@ -33,9 +41,11 @@ var timer = function() {
 	};
 
     var refresh = function() {
-		current = getTime() ;
-		printTime();
-	    setTimeout( refresh, Math.random( ) * 50 ) ;
+	    if( run ) {
+		  current = getTime() ;
+		  printTime();
+		  setTimeout( refresh, Math.random( ) * 50 ) ;
+		}
 	}
 	
 	var printTime = function() {
