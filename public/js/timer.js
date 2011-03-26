@@ -54,7 +54,7 @@ var timer = function() {
     time = time - m * 60000 ;
     var s = parseInt( time / 1000 ) ;
     time = time - s * 1000 ;
-    return h + ":" + m + ":" + s + "." + time ;
+    return sprintf("%02d:%02d:%02d.%03d", h, m, s, time);
   };
 
   var refresh = function() {
