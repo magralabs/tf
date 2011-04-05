@@ -3,8 +3,10 @@ function timer_alert() {
 }
 
 /***
-	TODO: wprowadzić kierunek i zliczanie czasu w dół
-
+	TODO: 
+	 -- wprowadzić kierunek i zliczanie czasu w dół
+	 -- wprowadzic callback po osiagnieciu pewnego pulapu ( tablica callbackow)
+	 -- callback co zadany interval onTime( 1000, function() {} )
 */
 
 function debug( info ) {
