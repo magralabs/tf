@@ -9,20 +9,26 @@
     <script type="text/javascript" src="/js/jquery-1.5.1.js"></script>
     <script type="text/javascript" src="/js/sprintf-0.7-beta1.js"></script>
     <script type="text/javascript" src="/js/timer.js"></script>
+	<script type="text/javascript" charset="utf-8">
+      $(function() {
+        $( '#timer' ).timer( {visual:true} ) ;
+		$( '.timer' ).timer( {visual:true} ) ;
+		timer = $('#timer').data('Timer');
+		
+      } );
+    </script>
   </head>
   <body>
     <h1>Timer</h1>
-    <script type="text/javascript" charset="utf-8">
-      $(function() {
-        var t = new timer();
-        t.init() ;
-      } );
-    </script>
-    <div id="timer">
-
-    </div>
-    <a href="#" id="timer_start">start</a>
-    <a href="#" id="timer_stop">stop</a>
-    <a href="#" id="timer_pause">pause</a>
+    
+	<h2> Single </h2>
+    <div id="timer"></div>
+	<input type="text" name="default" id="set" /> <a href="javascript:timer.setSettings( { t_past: parseInt( $('#set').val() ) * 1000 } );" >ustaw domyślnie</a>
+	<a href="javascript:$( '#timer' ).trigger('start');" >własny start</a>
+	<h3>Multiple</h3>
+	<div class="timer" ></div>
+	<div class="timer" ></div>
+	
+	
   </body>
 </html>

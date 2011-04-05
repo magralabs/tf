@@ -1,0 +1,16 @@
+.view {
+	display:block;
+	font-size:24px;
+}
+
+.start {
+	padding:10px;
+}
+
+.stop {
+	padding:10px;
+}
+
+.pause {
+	padding:10px;
+}
