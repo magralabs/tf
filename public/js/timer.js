@@ -19,40 +19,54 @@ function debug( info ) {
 		return this.each( function() {
 		  var UP = 1;
 		  var DOWN = -1;
-			var settings = $.extend( 
-				{ 
-					visual: false,	  // build inner html
-					current: 0,
-					direction: UP,      // 1 upper, -1 downer 
-				},
-				new_settings
-			) ; 
+		  
+		  var RUNNING = 0;
+		  var STOPPED = 1;
+		  var PAUSED = 2;
+		  
+			var settings = $.extend({ 
+  			visual: false,	  // build inner html
+				current: 0,
+				direction: UP,      // 1 upper, -1 downer,
+				interval: 0
+			}, new_settings) ;
+			
+			var callbacks = $.extend({
+			  start: function() {},
+			  stop: function() {},
+			  pause: function() {},
+			  interval: function() {}
+		  }, new_settings.callbacks); 
 		
 			var $this = $( this ) ;
-			var run = false;
 			var elapsed = settings.current;
 			var last = 0;
+			var state = STOPPED;
 
       this.start = function() {
 				debug('start');
-				run = true;
+				if (state == STOPPED)
+				  this.reset();
+				state = RUNNING;
 				last = 0 ;
+				callbacks.start();
 				refresh();
+				if (settings.interval > 0)
+				  interval();
 			};
 
 			this.pause = function() {
 				debug('pause');
-				if( run ) {
-					run = false ;
-				} else {
+				if( state == RUNNING ) {
+					state = PAUSED ;
+				} else if (state == PAUSED) {
 					this.start();
 				}
 			}
 
 			this.stop = function() {
 				debug( 'stop' );
-				run = false ;
-				this.reset();
+				state = STOPPED;
 			};
 
 			this.reset = function() {
@@ -89,15 +103,23 @@ function debug( info ) {
 			};
 
 			var refresh = function() {
-				if( run ) {
+		    if (state == RUNNING) {
 				  var t = getTime();
 				  if (last != 0) {
             elapsed = elapsed + settings.direction * (t - last);
 					}
 					last = t;
 					
-					if( settings.visual ) printTime();
 					setTimeout( refresh, Math.random( ) * 50 ) ;
+				}
+				
+        if( settings.visual ) printTime();
+  		}
+			
+			var interval = function() {
+			  if ( state == RUNNING ) {
+			    callbacks.interval($this.data('Timer'));
+					setTimeout( interval, settings.interval ) ;
 				}
 			}
 			
@@ -115,6 +137,10 @@ function debug( info ) {
 				$.extend( settings, new_settings ) ;
 				this.reset();
 				printTime( ) ;
+			}
+			
+			this.getElapsed = function() {
+			  return elapsed;
 			}
 			
 			$this.data( 'Timer', this ) ;  // Conect object to DOM

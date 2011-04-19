@@ -11,8 +11,20 @@
     <script type="text/javascript" src="/js/timer.js"></script>
 	  <script type="text/javascript" charset="utf-8">
       $(function() {
-        $( '#timer' ).timer( {visual:true} ) ;
-        $( '.timer' ).timer( {visual:true} ) ;
+        //$( '#timer' ).timer( {visual:true} ) ;
+        
+        var i = 0;
+        
+        
+        $( '#timer' ).timer( {
+          visual: true,
+          interval: 1000,
+          callbacks: {
+            interval: function(timer) {
+              console.log(timer.getElapsed());
+            }
+          }
+        });
       } );
     </script>
   </head>
