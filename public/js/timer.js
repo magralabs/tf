@@ -32,23 +32,7 @@ function debug( info ) {
 			var $this = $( this ) ;
 			var run = false;
 
-			var init = function() {
-				debug( 'init id:' + $this.attr('id') + ', class:' + $this.attr('class') );
-				if( settings.visual ) {
-					$this.append( $( '<span class="view" >timer id: ' + $this.attr('id') + '</span>' ) );
-					$this.append( $( '<a href="#" class="start" >start</a>' ) );
-					$this.append( $( '<a href="#" class="stop" >stop</a>' ) );
-					$this.append( $( '<a href="#" class="pause" >pause</a>' ) );
-					$( 'a', $this ).click(function() {
-						$this.trigger($(this).attr('class'), [ $(this) ]);
-					});
-				}
-				printTime() ;
-			};
-			
-			
-
-			var start = function() {
+      this.start = function() {
 				debug('start');
 				if( run ) settings.t_past = 0 ;
 				settings.t_start = getTime() ;
@@ -56,26 +40,27 @@ function debug( info ) {
 				refresh();
 			};
 
-			var pause = function() {
+			this.pause = function() {
 				debug('pause');
 				if( run ) {
 					settings.t_past += getTime() - settings.t_start ;
 					run = false ;
 				} else {
-					start();
+					this.start();
 				}
 			}
 
-			var stop = function() {
+			this.stop = function() {
 				debug( 'stop' );
 				run = false ;
-				reset();
+				this.reset();
 			};
 
-			var reset = function() {
+			this.reset = function() {
 				debug('reset');
 				settings.t_past = settings.t_start = settings.t_stop = settings.current = 0 ;
 			}
+			
 			var getTime = function() {
 				var d = new Date() ;
 				return d.getTime() ;
@@ -104,17 +89,6 @@ function debug( info ) {
 			var printTime = function() {
 				$( '.view',  $this ).html( timeToStr( settings.t_past + settings.current - settings.t_start ) );
 			}
-
-			$.each(
-				['start', 'stop', 'pause', 'reset'],
-				function(i, ev) {
-					$this.bind(
-						ev,
-						{ fn:{ start: start, stop: stop, reset: reset, pause: pause } },
-						$.fn.timer.events[ev]
-					);
-				}
-			);
 			
 			/* ------------------------ public functions ----------------------------------*/
 			
@@ -128,27 +102,28 @@ function debug( info ) {
 			}
 			
 			$this.data( 'Timer', this ) ;  // Conect object to DOM
+			
+			var init = function() {
+				debug( 'init id:' + $this.attr('id') + ', class:' + $this.attr('class') );
+				if( settings.visual ) {
+					$this.append( $( '<span class="view" >timer id: ' + $this.attr('id') + '</span>' ) );
+					$this.append( $( '<a href="#" class="start" >start</a>' ) );
+					$this.append( $( '<a href="#" class="stop" >stop</a>' ) );
+					$this.append( $( '<a href="#" class="pause" >pause</a>' ) );
+					$( 'a', $this ).click(function() {
+             switch( $(this).attr('class') ) {
+               case 'start': $this.data('Timer').start(); break;
+               case 'stop': $this.data('Timer').stop(); break;
+               case 'pause': $this.data('Timer').pause(); break;
+             }
+					});
+				}
+				printTime() ;
+			};
+			
 			init();
+			
 		});
 	} ;
 	
-	$.fn.timer.events = {
-		start: function( e ) {
-			debug( 'start' ) ;
-			e.data.fn.start();
-		},
-		stop: function( e ) {
-			debug( 'stop' );
-			e.data.fn.stop();
-		},
-		pause: function( e ) {
-			debug('pause' + e.data.run );
-			e.data.fn.pause();
-		},
-		reset: function( e ) {
-			debug('reset');
-			e.data.fn.reset();
-		}
-	} ;
-
 })(jQuery);
