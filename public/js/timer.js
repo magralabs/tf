@@ -30,21 +30,18 @@ function debug( info ) {
 		
 			var $this = $( this ) ;
 			var run = false;
-			var elapsed = settings.current;
 			var last = 0;
 
       this.start = function() {
 				debug('start');
-				if( run ) settings.t_past = 0 ;
-				settings.t_start = getTime() ;
 				run = true;
+				last = 0 ;
 				refresh();
 			};
 
 			this.pause = function() {
 				debug('pause');
 				if( run ) {
-					settings.t_past += getTime() - settings.t_start ;
 					run = false ;
 				} else {
 					this.start();
@@ -59,7 +56,7 @@ function debug( info ) {
 
 			this.reset = function() {
 				debug('reset');
-				settings.t_past = settings.t_start = settings.t_stop = settings.current = 0 ;
+				settings.current = 0 ;
 			}
 			
 			this.toggleDirection = function( elem ) {
@@ -94,7 +91,7 @@ function debug( info ) {
 				if( run ) {
 				  var t = getTime();
 				  if (last != 0) {
-  					elapsed = elapsed + settings.direction * (t - last);
+  					settings.current = settings.current + settings.direction * (t - last);
 					}
 					last = t;
 					
@@ -104,7 +101,7 @@ function debug( info ) {
 			}
 			
 			var printTime = function() {
-				$( '.view',  $this ).html( timeToStr( elapsed ) );
+				$( '.view',  $this ).html( timeToStr( settings.current ) );
 			}
 			
 			/* ------------------------ public functions ----------------------------------*/

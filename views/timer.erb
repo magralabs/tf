@@ -22,7 +22,7 @@
   	<h2>Single</h2>
     <div id="timer"></div>
     <input type="text" name="default" id="set" />
-    <a href="javascript:$( '#timer' ).data('Timer').setSettings( { t_past: parseInt( $('#set').val() ) * 1000 } );" >ustaw domyślnie</a>
+    <a href="javascript:$( '#timer' ).data('Timer').setSettings( { current: parseInt( $('#set').val() ) * 1000 } );" >ustaw domyślnie</a>
   	<a href="javascript:$( '#timer' ).data('Timer').start();" >własny start</a>
   	<a href="#" onclick="$( '#timer' ).data('Timer').toggleDirection(this);" >^</a>
   	
