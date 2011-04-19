@@ -30,6 +30,7 @@ function debug( info ) {
 		
 			var $this = $( this ) ;
 			var run = false;
+			var elapsed = settings.current;
 			var last = 0;
 
       this.start = function() {
@@ -56,7 +57,7 @@ function debug( info ) {
 
 			this.reset = function() {
 				debug('reset');
-				settings.current = 0 ;
+				elapsed = settings.current ;
 			}
 			
 			this.toggleDirection = function( elem ) {
@@ -91,7 +92,7 @@ function debug( info ) {
 				if( run ) {
 				  var t = getTime();
 				  if (last != 0) {
-  					settings.current = settings.current + settings.direction * (t - last);
+            elapsed = elapsed + settings.direction * (t - last);
 					}
 					last = t;
 					
@@ -101,7 +102,7 @@ function debug( info ) {
 			}
 			
 			var printTime = function() {
-				$( '.view',  $this ).html( timeToStr( settings.current ) );
+				$( '.view',  $this ).html( timeToStr( elapsed ) );
 			}
 			
 			/* ------------------------ public functions ----------------------------------*/
@@ -112,6 +113,7 @@ function debug( info ) {
 			
 			this.setSettings = function( new_settings ) {
 				$.extend( settings, new_settings ) ;
+				this.reset();
 				printTime( ) ;
 			}
 			
