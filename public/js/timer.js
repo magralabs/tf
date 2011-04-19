@@ -17,20 +17,21 @@ function debug( info ) {
 (function($){
 	$.fn.timer = function( new_settings ) {
 		return this.each( function() {
+		  var UP = 1;
+		  var DOWN = -1;
 			var settings = $.extend( 
 				{ 
 					visual: false,	  // build inner html
-					t_start: 0,
 					current: 0,
-					t_stop:0,
-					t_past:0,
-					direction: 1,      // 1 upper, -1 downer 
+					direction: UP,      // 1 upper, -1 downer 
 				},
 				new_settings
 			) ; 
 		
 			var $this = $( this ) ;
 			var run = false;
+			var elapsed = settings.current;
+			var last = 0;
 
       this.start = function() {
 				debug('start');
@@ -61,6 +62,16 @@ function debug( info ) {
 				settings.t_past = settings.t_start = settings.t_stop = settings.current = 0 ;
 			}
 			
+			this.toggleDirection = function( elem ) {
+			  if (settings.direction == UP) {
+			    settings.direction = DOWN;
+  			  $(elem).html('v');
+			  } else {
+			    settings.direction = UP;
+  			  $(elem).html('^');
+			  }
+			}
+			
 			var getTime = function() {
 				var d = new Date() ;
 				return d.getTime() ;
@@ -75,19 +86,25 @@ function debug( info ) {
 				time = time - m * 60000 ;
 				var s = parseInt( time / 1000 ) ;
 				time = time - s * 1000 ;
-				return sprintf("%02d:%02d:%02d.%03d", h, m, s, time);
+				return (time < 0 ? "-" : "") + sprintf("%02d:%02d:%02d.%03d", 
+  				Math.abs(h), Math.abs(m), Math.abs(s), Math.abs(time));
 			};
 
 			var refresh = function() {
 				if( run ) {
-					settings.current = getTime() ;
+				  var t = getTime();
+				  if (last != 0) {
+  					elapsed = elapsed + settings.direction * (t - last);
+					}
+					last = t;
+					
 					if( settings.visual ) printTime();
 					setTimeout( refresh, Math.random( ) * 50 ) ;
 				}
 			}
 			
 			var printTime = function() {
-				$( '.view',  $this ).html( timeToStr( settings.t_past + settings.current - settings.t_start ) );
+				$( '.view',  $this ).html( timeToStr( elapsed ) );
 			}
 			
 			/* ------------------------ public functions ----------------------------------*/
